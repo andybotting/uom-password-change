@@ -43,10 +43,6 @@ def generate_password():
             return password
 
 
-def encode_password(password):
-    return quote(password, safe='')
-
-
 def login(username, password):
     print('Logging in')
     # For cookies
@@ -56,7 +52,7 @@ def login(username, password):
         'command': 'login',
         'activeControl': '',
         'accountId': username,
-        'password': encode_password(password),
+        'password': password,
     }
     r = session.post('https://idm.unimelb.edu.au/idm/user/login.jsp', data=payload)
     output = r.text
@@ -82,14 +78,13 @@ def logout(session):
 
 
 def change_password(session, password):
-    encoded_password = encode_password(password)
     payload = {
         'id': '',
         'command': 'Save',
         'activeControl': '',
         'resourceAccounts.selectAll': 'true',
-        'resourceAccounts.password': encoded_password,
-        'resourceAccounts.confirmPassword': encoded_password,
+        'resourceAccounts.password': password,
+        'resourceAccounts.confirmPassword': password,
     }
     r = session.post('https://idm.unimelb.edu.au/idm/user/changePassword.jsp', data=payload)
     output = r.text
